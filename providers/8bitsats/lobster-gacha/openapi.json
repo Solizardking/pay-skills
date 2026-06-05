@@ -1,0 +1,132 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Lobster Gacha API",
+    "version": "1.0.0",
+    "description": "Provably fair AI agent gacha on Solana with live Phoenix perpetuals market data.",
+    "contact": { "url": "https://solanaclawd.com" }
+  },
+  "servers": [{ "url": "https://gacha.solanaclawd.com", "description": "Production" }],
+  "paths": {
+    "/api/pull": {
+      "post": {
+        "operationId": "pull",
+        "summary": "Provably fair gacha pull",
+        "description": "Execute 1x or 10x gacha pull. Each card's commitment is SHA-256(wallet:spinIndex:blockhash). spinIndex is returned per-card so any third party can independently verify each commitment without guessing. For the Nth card in a 10x pull, spinIndex = spinBase+(N-1).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["wallet"],
+                "properties": {
+                  "wallet": { "type": "string", "description": "Base58-encoded Solana public key.", "example": "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU" },
+                  "count": { "type": "integer", "enum": [1, 10], "default": 1, "description": "Pulls to execute. 10x activates the pity system." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful pull",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": { "type": "boolean" },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "cards": { "type": "array", "items": { "$ref": "#/components/schemas/AgentCard" } },
+                        "blockhash": { "type": "string", "description": "Solana blockhash used as entropy source for all cards in this pull." },
+                        "commitment": { "type": "string", "description": "SHA-256 hex of wallet:spinBase:blockhash (spinBase = spinIndex of the first card)." },
+                        "pullCount": { "type": "integer" }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": { "description": "Missing or invalid wallet address" },
+          "402": { "description": "Payment required — x402 challenge returned when no valid payment header is present" }
+        }
+      }
+    },
+    "/api/perps": {
+      "get": {
+        "operationId": "perps",
+        "summary": "Phoenix perpetuals market data proxy",
+        "description": "CORS-safe proxy to the Phoenix DEX REST API. Returns live tickers, funding rates, OHLCV candles, and TA indicator reports for SOL, BTC, and ETH perpetuals. Read-only.",
+        "parameters": [
+          { "name": "cmd", "in": "query", "required": true, "schema": { "type": "string" }, "description": "Phoenix API command. Examples: market/ticker/SOL, market/funding-rates/SOL, market/candles/SOL, ta/report/SOL", "example": "market/ticker/SOL" },
+          { "name": "interval", "in": "query", "schema": { "type": "string", "enum": ["1m","5m","15m","1h","4h","1d"] }, "description": "Candle interval for market/candles commands." },
+          { "name": "limit", "in": "query", "schema": { "type": "integer", "minimum": 1, "maximum": 200 } },
+          { "name": "timeframe", "in": "query", "schema": { "type": "string", "enum": ["1h","4h","1d"] }, "description": "TA report timeframe for ta/report commands." },
+          { "name": "with_indicators", "in": "query", "schema": { "type": "string" }, "description": "Comma-separated indicators: rsi, macd, bbands." }
+        ],
+        "responses": {
+          "200": { "description": "Proxied Phoenix API response", "content": { "application/json": { "schema": { "oneOf": [{ "$ref": "#/components/schemas/PhoenixTicker" }, { "$ref": "#/components/schemas/PhoenixTaReport" }] } } } },
+          "400": { "description": "Missing or invalid cmd parameter" },
+          "403": { "description": "Command not on the safe read-only whitelist" },
+          "502": { "description": "Phoenix upstream error" }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AgentCard": {
+        "type": "object",
+        "required": ["id", "name", "rarity", "clawdPrize", "spinIndex", "commitment"],
+        "properties": {
+          "id":         { "type": "string", "example": "l1" },
+          "name":       { "type": "string", "example": "CLAWD Supreme" },
+          "role":       { "type": "string", "example": "Apex Agent" },
+          "rarity":     { "type": "string", "enum": ["common", "rare", "epic", "legendary"] },
+          "power":      { "type": "integer", "minimum": 1, "maximum": 99 },
+          "clawdPrize": { "type": "integer", "example": 50000 },
+          "icon":       { "type": "string", "example": "👑" },
+          "spinIndex":  {
+            "type": "integer",
+            "description": "Unix timestamp (ms) used as the spinIndex in SHA-256(wallet:spinIndex:blockhash). For the Nth card in a 10x pull, spinIndex = spinBase+(N-1). Always returned in the card object — use this value directly to verify commitment.",
+            "example": 1748991234567
+          },
+          "commitment": {
+            "type": "string",
+            "description": "SHA-256 hex of wallet:spinIndex:blockhash — independently verifiable by any third party.",
+            "example": "7c4eb91a3f2d8a1b9e0c5f4d2e7a6b3c8d9f0e1a2b3c4d5e6f7a8b9c0d1e2f3"
+          }
+        }
+      },
+      "PhoenixTicker": {
+        "type": "object",
+        "properties": {
+          "symbol":       { "type": "string", "example": "SOL" },
+          "markPrice":    { "type": "number", "example": 172.45 },
+          "indexPrice":   { "type": "number", "example": 172.31 },
+          "fundingRate":  { "type": "number", "description": "Current funding rate as decimal (0.0001 = 0.01%/8h)", "example": 0.0001 },
+          "openInterest": { "type": "number", "example": 4200000 },
+          "volume24h":    { "type": "number", "example": 18500000 },
+          "change24h":    { "type": "number", "description": "24h price change as decimal (0.023 = +2.3%)", "example": 0.023 }
+        }
+      },
+      "PhoenixTaReport": {
+        "type": "object",
+        "properties": {
+          "symbol":         { "type": "string", "example": "SOL" },
+          "timeframe":      { "type": "string", "example": "1h" },
+          "rsi":            { "type": "number", "minimum": 0, "maximum": 100, "example": 58.4 },
+          "macdHistogram":  { "type": "number", "example": 0.42 },
+          "bbandsPosition": { "type": "string", "enum": ["upper", "middle", "lower"] },
+          "atr":            { "type": "number", "example": 2.1 },
+          "adx":            { "type": "number", "example": 24.7 },
+          "signal":         { "type": "string", "enum": ["bullish", "bearish", "neutral"] }
+        }
+      }
+    }
+  }
+}
