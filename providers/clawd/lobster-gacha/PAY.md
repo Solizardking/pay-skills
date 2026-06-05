@@ -8,6 +8,27 @@ category: other
 version: v1
 openapi:
   path: openapi.json
+endpoints:
+  - path: /api/pull
+    method: POST
+    description: "Execute 1× or 10× provably fair gacha pull. Returns AI agent cards with rarity tier, CLAWD token prize, and SHA-256 commitment hash for on-chain verification."
+    pricing:
+      dimensions:
+        - direction: usage
+          unit: requests
+          scale: 1
+          tiers:
+            - price_usd: 0.0025
+  - path: /api/perps
+    method: GET
+    description: "Live Phoenix perpetuals data proxy: ticker, funding rates, OHLCV candles, and TA indicators (RSI/MACD/BBands) for SOL/BTC/ETH."
+    pricing:
+      dimensions:
+        - direction: usage
+          unit: requests
+          scale: 1
+          tiers:
+            - price_usd: 0.001
 ---
 
 <div align="center">
