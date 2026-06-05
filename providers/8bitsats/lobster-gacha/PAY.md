@@ -1,10 +1,11 @@
 ---
 name: lobster-gacha
 title: "Lobster Gacha — Provably Fair Onchain AI Agent Gacha (Solana)"
-description: "Provably fair Solana gacha API returning AI agent cards (rarity: common→legendary) with SHA-256+blockhash commitments, CLAWD token prizes, and Metaplex NFT minting."
+description: "Provably fair Solana gacha API returning AI agent cards (rarity: common to legendary) with SHA-256+blockhash commitments, CLAWD token prizes, and Metaplex NFT minting."
 use_case: "Use when an agent needs to execute a provably fair gacha pull on Solana, win CLAWD tokens or Metaplex NFTs, query live Phoenix perpetuals market data, or verify randomness via blockhash commitment."
 service_url: "https://gacha.solanaclawd.com"
-category: other
+openapi.url: "https://gacha.solanaclawd.com/api/openapi.json"
+category: finance
 version: v1
 endpoints:
   - path: /api/pull
@@ -19,26 +20,12 @@ endpoints:
     resource: market-data
 ---
 
-<div align="center">
-
 [![CLAWD](https://img.shields.io/badge/CLAWD-1%2C000%20per%20pull-blueviolet?style=for-the-badge&logo=solana&logoColor=white)](https://gacha.solanaclawd.com)
 [![Provably Fair](https://img.shields.io/badge/Provably%20Fair-SHA--256%20%2B%20Blockhash-brightgreen?style=for-the-badge&logo=bitcoin&logoColor=white)](https://github.com/x402agent/solana-clawd)
 [![Phoenix Perps](https://img.shields.io/badge/Phoenix-Perps%20Live-orange?style=for-the-badge&logo=apache&logoColor=white)](https://gacha.solanaclawd.com/api/perps)
 [![x402](https://img.shields.io/badge/Payment-x402%20USDC-00d4aa?style=for-the-badge)](https://x402.wtf)
 
-```
- ██╗      ██████╗ ██████╗ ███████╗████████╗███████╗██████╗
- ██║     ██╔═══██╗██╔══██╗██╔════╝╚══██╔══╝██╔════╝██╔══██╗
- ██║     ██║   ██║██████╔╝███████╗   ██║   █████╗  ██████╔╝
- ██║     ██║   ██║██╔══██╗╚════██║   ██║   ██╔══╝  ██╔══██╗
- ███████╗╚██████╔╝██████╔╝███████║   ██║   ███████╗██║  ██║
- ╚══════╝ ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝   ╚══════╝╚═╝  ╚═╝
-          🦞  G A C H A  —  P R O V A B L Y  F A I R  🎰
-```
-
-*The only onchain gacha machine that returns AI agent cards backed by real Solana blockhash commitments.*
-
-</div>
+The only onchain gacha machine that returns AI agent cards backed by real Solana blockhash commitments.
 
 ---
 
@@ -52,50 +39,73 @@ Payment: x402 $0.0025 USDC (via x402.wtf)
 { "wallet": "<base58-pubkey>", "count": 1 }
 ```
 
+**Response** (`count=1`):
+
 ```json
 {
   "ok": true,
   "data": {
     "cards": [{
+      "id": "l1",
       "name": "CLAWD Supreme",
       "rarity": "legendary",
       "clawdPrize": 50000,
+      "spinIndex": 1748991234567,
       "commitment": "7c4eb91a..."
     }],
     "blockhash": "EkSn...3MiQ",
-    "commitment": "sha256(wallet:spinIndex:blockhash)"
+    "commitment": "sha256hex of wallet:spinBase:blockhash",
+    "pullCount": 1
   }
 }
 ```
 
-| Rarity | Rate | CLAWD Prize |
-|--------|------|-------------|
-| 🟫 Common | 60% | 100 |
-| 🟦 Rare | 25% | 1,000 |
-| 🟪 Epic | 12% | 5,000 |
-| 🌟 Legendary | 3% | 50,000 |
+For a 10x pull (`count=10`), `cards` is an array of 10 objects. Each card carries its own `spinIndex`:
+the first card uses `spinBase`, the second `spinBase+1`, and so on through `spinBase+9`.
+`spinBase` is the Unix timestamp (ms) captured at pull time and is returned as each card's `spinIndex` field.
 
-> **Pity system**: 10× pull always guarantees ≥ Rare on the final card.
+| Rarity       | Rate | CLAWD Prize |
+| ------------ | ---- | ----------- |
+| Common       | 60%  | 100         |
+| Rare         | 25%  | 1,000       |
+| Epic         | 12%  | 5,000       |
+| Legendary    | 3%   | 50,000      |
 
-**Verify in browser** — no server trust required:
+> **Pity system**: 10x pull always guarantees >= Rare on the final card.
+
+**Verify any card in-browser** — no server trust required.
+
+Each card object contains its own `spinIndex`. Substitute the values directly from the response:
+
 ```js
-const hash = await crypto.subtle.digest('SHA-256',
-  new TextEncoder().encode(`${wallet}:${spinIndex}:${blockhash}`));
-const hex = [...new Uint8Array(hash)].map(b => b.toString(16).padStart(2,'0')).join('');
+// card = one element of data.cards; blockhash = data.blockhash
+const hash = await crypto.subtle.digest(
+  'SHA-256',
+  new TextEncoder().encode(`${wallet}:${card.spinIndex}:${blockhash}`)
+);
+const hex = [...new Uint8Array(hash)]
+  .map(b => b.toString(16).padStart(2, '0')).join('');
+
+console.assert(hex === card.commitment, 'Commitment mismatch');
 ```
+
+`card.spinIndex` is the exact integer that was hashed server-side; no guessing or derivation needed.
 
 ---
 
 ## `/api/perps` — Phoenix Perps Market Data
 
-Real-time Phoenix DEX data for agent decision-making — long/short signals, funding rate squeeze detection, and TA indicators.
+Real-time Phoenix DEX data for agent decision-making: long/short signals, funding rate squeeze
+detection, TA indicators (RSI, MACD, Bollinger Bands).
 
-```
+```text
 GET /api/perps?cmd=market/ticker/SOL
 GET /api/perps?cmd=market/funding-rates/SOL&limit=10
 GET /api/perps?cmd=market/candles/SOL&interval=1h&with_indicators=rsi,macd
 GET /api/perps?cmd=ta/report/SOL&timeframe=1h
 ```
+
+Available symbols: `SOL`, `BTC`, `ETH`
 
 ---
 
@@ -105,15 +115,11 @@ GET /api/perps?cmd=ta/report/SOL&timeframe=1h
 - **CLAWD burn-to-play**: 1,000 CLAWD per pull — real SPL token burn on `8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump`
 - **Streamflow vesting** auto-triggered for legendary wins
 - **Multi-model AI oracle**: card narrative generated by Gemini / DeepSeek / Nemotron / Claude (model derived from commitment hash)
-- **Jupiter swap** embedded (SOL → CLAWD) — get CLAWD without leaving the app
+- **Jupiter swap** embedded (SOL to CLAWD) — get CLAWD without leaving the app
 - **A2A / MCP endpoints** via Metaplex Agent Registry
 - **x402 payment gateway**: micropayments via [x402.wtf](https://x402.wtf)
 
 ---
 
-<div align="center">
-
-Source: [github.com/x402agent/solana-clawd](https://github.com/x402agent/solana-clawd) · Site: [solanaclawd.com](https://solanaclawd.com) · Gateway: [x402.wtf](https://x402.wtf)  
-Token: [`8cHzQH…pump`](https://jup.ag/swap/SOL-8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump) · Network: Solana Mainnet
-
-</div>
+Source: [github.com/x402agent/solana-clawd](https://github.com/x402agent/solana-clawd) · Site: [solanaclawd.com](https://solanaclawd.com) · Gateway: [x402.wtf](https://x402.wtf)
+Token: [`8cHzQH...pump`](https://jup.ag/swap/SOL-8cHzQHUS2s2h8TzCmfqPKYiM4dSt4roa3n7MyRLApump) · Network: Solana Mainnet
