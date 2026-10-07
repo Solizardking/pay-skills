@@ -87,3 +87,26 @@ Body:
 - Network: Solana mainnet (`solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp` / mainnet-beta)
 - Currency: USDC (`EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v`)
 - Protocols: x402 exact + MPP solana charge
+
+## Musebook ecosystem integrations
+
+- [Musebook x402 and x402m](../../../integrations/musebook/x402/PAY.md):
+  mainnet USDC capability report, facilitator discovery, and owner-approved agent
+  messaging through [Solizardking/x402m](https://github.com/Solizardking/x402m).
+- [Musebook Pump Live](https://pump.musebook.trade/): public Solana Pump.fun
+  launch feed, Stonk announcements, recent snapshots, and direct Railway
+  WebSocket transport. [Endpoint listing and OpenAPI](../../../integrations/musebook/pump/PAY.md).
+- [Proxy and bot setup](../../../integrations/musebook/x402/INTEGRATION.md):
+  the existing Musebook `x402-proxy-template` and `x402m-bot` implementations.
+
+These are companion integrations, not additional Cheshire paid routes. The
+Musebook OpenAPI snapshots and staged catalog metadata live outside `providers/`
+until the registry's payment probe accepts them. Pump currently serves free
+reads; the two payment proxy demos advertise devnet test USDC. See the
+[Musebook validation notes](../../../integrations/musebook/README.md) for the
+remaining paid-catalog compatibility checks.
+
+The [SVM batch-settlement companion](../../../integrations/musebook/batch-settlement/README.md)
+adds the requested high-throughput channel-payment integration contract and
+read-only preflight, separately from x402m messaging and atomic transfer batches.
+It is not an additional live Cheshire or Musebook paid endpoint.

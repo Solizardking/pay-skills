@@ -95,3 +95,14 @@ CI probes every endpoint and emits `::warning::` / `::error::` annotations inlin
    - Runs an incremental build (`--only <changed-fqns> --previous-dist prev-dist`) — unchanged providers are copied verbatim.
    - Publishes `dist/` to `gs://pay-skills/v1/`.
 3. `pay skills update` clients refetch the index. Search updates within minutes.
+
+## Musebook companion integrations
+
+[Musebook x402 and x402m](integrations/musebook/README.md) includes payment
+discovery, the official [x402m repository](https://github.com/Solizardking/x402m),
+and setup for the existing payment proxy and agent bot.
+
+[Musebook Pump Live](https://pump.musebook.trade/) is included with a focused
+[endpoint listing and OpenAPI snapshot](integrations/musebook/pump/PAY.md). It
+currently exposes free launch snapshots; no paid feed entitlement is claimed.
+These staged integrations are not yet published paid providers.
