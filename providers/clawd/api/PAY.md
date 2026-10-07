@@ -1,6 +1,6 @@
 ---
-name: terminal
-title: "Cheshire Terminal"
+name: api
+title: "Clawd"
 description: "SOL-GPT agent APIs: cloud browser runs, Dark Clawd MPP charges, paid trade plans, and monthly SPONGE_API_KEY mint settled in USDC or $CLAWD burn via x402/MPP."
 use_case: "Use for cloud browser automation, Solana MPP charges, paid trade plans, monthly SPONGE_API_KEY (base $4.20 / premium $20), and CLAWD-holder free paths on SOL-GPT."
 category: finance
@@ -10,7 +10,7 @@ openapi:
   path: openapi.json
 ---
 
-SOL-GPT Cheshire Terminal exposes stablecoin-gated agent APIs on Solana mainnet.
+Clawd exposes stablecoin-gated agent APIs on Solana mainnet.
 
 Canonical production origin for this listing is `https://solgpt.us`. Live production aliases: `https://solgpt.trade` and `https://x402.life`. Catalog `service_url` remains `https://solgpt.us`; aliases are not separate catalog entries.
 
@@ -99,7 +99,7 @@ Body:
 - [Proxy and bot setup](../../../integrations/musebook/x402/INTEGRATION.md):
   the existing Musebook `x402-proxy-template` and `x402m-bot` implementations.
 
-These are companion integrations, not additional Cheshire paid routes. The
+These are companion integrations, not additional Clawd paid routes. The
 Musebook OpenAPI snapshots and staged catalog metadata live outside `providers/`
 until the registry's payment probe accepts them. Pump currently serves free
 reads; the two payment proxy demos advertise devnet test USDC. See the
@@ -109,8 +109,8 @@ remaining paid-catalog compatibility checks.
 The [SVM batch-settlement companion](../../../integrations/musebook/batch-settlement/README.md)
 adds the requested high-throughput channel-payment integration contract and
 read-only preflight, separately from x402m messaging and atomic transfer batches.
-It is not an additional live Cheshire or Musebook paid endpoint.
+It is not an additional live Clawd or Musebook paid endpoint.
 
 The [Clawd Pay Kit harness](../../../integrations/clawd-pay-kit/README.md)
 provides the TypeScript SDK build and conformance tier for this PR. It does not
-execute paid Cheshire routes during CI.
+execute paid Clawd routes during CI.

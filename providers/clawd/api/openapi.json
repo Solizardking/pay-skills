@@ -1,11 +1,11 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Cheshire Terminal Paid API",
+    "title": "Clawd Paid API",
     "version": "1.0.0",
-    "description": "Stablecoin-gated SOL-GPT Cheshire Terminal endpoints. Canonical production is https://solgpt.us; https://solgpt.trade and https://x402.life are live production aliases. Unpaid calls return HTTP 402 with x402 and/or MPP Solana USDC challenges. Paper modes may skip live settlement when configured. Monthly SPONGE_API_KEY mint is POST /api/sponge/keys ($4.20 base / $20 premium, USDC or $CLAWD burn).",
+    "description": "Stablecoin-gated Clawd endpoints. Canonical production is https://solgpt.us; https://solgpt.trade and https://x402.life are live production aliases. Unpaid calls return HTTP 402 with x402 and/or MPP Solana USDC challenges. Paper modes may skip live settlement when configured. Monthly SPONGE_API_KEY mint is POST /api/sponge/keys ($4.20 base / $20 premium, USDC or $CLAWD burn).",
     "contact": {
-      "name": "Cheshire Terminal",
+      "name": "Clawd",
       "url": "https://solgpt.us"
     }
   },

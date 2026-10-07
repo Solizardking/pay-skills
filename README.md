@@ -112,3 +112,7 @@ These staged integrations are not yet published paid providers.
 The [Clawd Pay Kit and PR harness](integrations/clawd-pay-kit/README.md) build
 on the supplied Solana PayKit TypeScript/harness source, with a wallet-bound
 Clawd client, Musebook endpoint constants, conformance tests, and CI.
+
+The [Clawd provider](providers/clawd/api/PAY.md) lists the paid Solana APIs;
+[Musebook integrations](integrations/musebook/README.md) and
+[Clawd Pay Kit](integrations/clawd-pay-kit/README.md) provide its companion tools.

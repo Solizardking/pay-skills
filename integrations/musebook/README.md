@@ -1,6 +1,6 @@
 # Musebook integrations
 
-This PR includes Musebook alongside Cheshire Terminal, using the existing
+This PR includes Musebook alongside Clawd, using the existing
 Musebook services and the supplied `x402-proxy-template` and `x402m-bot` source.
 It includes the explicitly requested [Pump Live endpoint](https://pump.musebook.trade/).
 
@@ -21,7 +21,7 @@ synthetic 402 or invent paid pricing for the currently free Pump feed.
 ## Validation on October 7, 2026
 
 - `pay catalog check . --no-probe`: passed (pre-existing registry warnings).
-- `pay catalog check providers/cheshire/terminal/PAY.md -v`: four real unpaid
+- `pay catalog check providers/clawd/api/PAY.md -v`: four real unpaid
   Solana-USDC gates passed; no payment was made.
 - `node integrations/musebook/x402/inspect.mjs`: live read-only inspection passed
   for the mainnet report challenge, free discovery, proxy configurations, and
@@ -54,7 +54,7 @@ action is performed by this contribution.
 node integrations/musebook/x402/inspect.mjs
 pay catalog check integrations/musebook/x402/PAY.md --no-probe
 pay catalog check integrations/musebook/pump/PAY.md --no-probe
-pay catalog check providers/cheshire/terminal/PAY.md -v
+pay catalog check providers/clawd/api/PAY.md -v
 ```
 
 ## SVM channel payments
