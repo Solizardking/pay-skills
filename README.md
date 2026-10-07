@@ -106,3 +106,9 @@ and setup for the existing payment proxy and agent bot.
 [endpoint listing and OpenAPI snapshot](integrations/musebook/pump/PAY.md). It
 currently exposes free launch snapshots; no paid feed entitlement is claimed.
 These staged integrations are not yet published paid providers.
+
+### Clawd Pay Kit
+
+The [Clawd Pay Kit and PR harness](integrations/clawd-pay-kit/README.md) build
+on the supplied Solana PayKit TypeScript/harness source, with a wallet-bound
+Clawd client, Musebook endpoint constants, conformance tests, and CI.

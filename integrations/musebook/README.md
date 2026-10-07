@@ -62,3 +62,9 @@ pay catalog check providers/cheshire/terminal/PAY.md -v
 The [SVM batch-settlement integration](batch-settlement/README.md) includes the
 requested channel-payment contract, requirements schema, and nine tested
 preflight checks. Live Musebook does not yet advertise this v2 scheme.
+
+## Clawd Pay Kit
+
+The [Clawd Pay Kit](../clawd-pay-kit/README.md) adds a buildable TypeScript
+package using the supplied PayKit source and a PR harness that exercises
+conformance vectors, wallet policy, legacy x402, and the channel preflight.

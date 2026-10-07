@@ -110,3 +110,7 @@ The [SVM batch-settlement companion](../../../integrations/musebook/batch-settle
 adds the requested high-throughput channel-payment integration contract and
 read-only preflight, separately from x402m messaging and atomic transfer batches.
 It is not an additional live Cheshire or Musebook paid endpoint.
+
+The [Clawd Pay Kit harness](../../../integrations/clawd-pay-kit/README.md)
+provides the TypeScript SDK build and conformance tier for this PR. It does not
+execute paid Cheshire routes during CI.
