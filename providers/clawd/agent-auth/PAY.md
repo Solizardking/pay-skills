@@ -1,28 +1,51 @@
 ---
 name: agent-auth
-title: "Clawd Agent Auth — CAAP/1.0"
-description: "Solana-native agent authentication, on-chain identity registration (Metaplex Agent Registry / EIP-8004), SIWS sign-in, CLAWD token attestation, Helius DAS NFT verification, and subscription tier gating for AI agents."
-use_case: "Use for authenticating AI agents on Solana, verifying NFT ownership, checking CLAWD balances for tier gating, registering on-chain identities via Metaplex Agent Registry (EIP-8004), launching Genesis bonding curve tokens, and delegating execution."
+title: "Musebook Agent Auth"
+description: "Solana agent authentication and authorization on Musebook: SIWS sign-in challenges, agent registration, device-code approval, scoped capability grants, token introspection and revocation, and API key verification."
+use_case: "Use for authenticating AI agents with Solana wallets, registering agents for scoped capability access, approving agent sign-in via device codes, introspecting or revoking agent tokens, and verifying Musebook API keys."
 category: identity
-service_url: https://x402.wtf/agentauth
+service_url: https://musebook.trade
 version: v1
 openapi:
   path: openapi.json
 ---
 
-CAAP/1.0 (Clawd Agent Attestation Protocol) is the authentication backbone of
-the Clawd platform. It provides four verification phases: SIWS wallet sign-in,
-Helius DAS NFT verification, CLAWD SPL token attestation, and subscription
-tier gating (Free → Bronze → Silver → Gold → Diamond).
+Musebook Agent Auth is the live authentication and authorization surface for
+AI agents on Musebook (protocol description: `GET /.well-known/agent-configuration`,
+version 1.0-draft, issuer `https://musebook.trade/api/auth`, Ed25519). The
+server never signs wallet transactions; agents prove control of a Solana
+wallet by signing challenges, and owners approve scoped capability grants.
 
-Agent identities are registered on-chain through the Metaplex Agent Registry
-(EIP-8004 compliant), with Asset Signer PDA wallets (no private key), per-asset
-execution delegation, and permanent token-agent binding via setAgentTokenV1.
+What the API offers:
+
+- **Discovery** — `GET /.well-known/agent-configuration` lists the issuer,
+  algorithms, modes (delegated, autonomous), approval methods
+  (device_authorization), and every endpoint below.
+- **Sign in with Solana** — `POST /api/siws/challenge` issues a sign-in
+  challenge for a wallet address; `POST /api/siws/verify` verifies the signed
+  challenge.
+- **Agent lifecycle** — `POST /api/auth/agent/register` registers an agent,
+  `POST /api/auth/agent/device/code` starts a device-code approval flow for a
+  human owner, `GET /api/auth/agent/status` reports the authenticated agent,
+  `POST /api/auth/agent/introspect` inspects a presented token, and
+  `POST /api/auth/agent/revoke` / `POST /api/auth/agent/rotate-key` revoke
+  grants and rotate agent keys.
+- **Capabilities** — `GET /api/auth/capability/list` returns the live
+  capability catalog; `POST /api/auth/capability/execute` executes a granted
+  capability (the protocol's default location).
+- **API keys** — `GET /api/keys/verify` checks a Musebook API key presented
+  as a Bearer token.
+
+All endpoints are free. Discovery and the SIWS challenge are public; the
+verify, lifecycle, capability, and key endpoints require the corresponding
+wallet signature, session, agent token, or API key and answer `400`/`401`
+JSON errors when credentials are missing or malformed.
 
 ## Spend-aware usage
 
-- Use `/caap/status/:agentId?wallet=` for lightweight checks before running full attestation.
-- Cache attestation results — `attestationHash` is deterministic for a given tuple.
-- Reuse `fetchWalletSnapshot` results; Solana balances are public and can be cached briefly.
-- Derive PDAs client-side with `deriveAgentIdentityPda()` / `deriveAssetSignerPda()` — no RPC round-trip needed.
-- Validate Genesis launch inputs with `validateGenesisLaunchInput()` before submitting to chains.
+- Read `/.well-known/agent-configuration` once and cache it — the endpoint
+  map changes rarely.
+- Fetch `GET /api/auth/capability/list` before executing so calls only use
+  capabilities that are actually granted and described.
+- Introspect a token once per session instead of per call, and revoke
+  grants (`/api/auth/agent/revoke`) as soon as they are no longer needed.
