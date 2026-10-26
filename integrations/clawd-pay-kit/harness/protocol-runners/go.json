@@ -1,5 +1,0 @@
-{
-  "language": "go",
-  "command": ["go", "run", "./cmd/protocol-runner"],
-  "cwd": "go"
-}

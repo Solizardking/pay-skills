@@ -1,5 +1,0 @@
-{
-  "language": "typescript",
-  "command": ["pnpm", "exec", "node", "--import", "tsx", "src/protocol/runners/typescript.ts"],
-  "cwd": "harness"
-}

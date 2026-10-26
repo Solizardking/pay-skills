@@ -1,5 +1,0 @@
-{
-  "extends": "./tsconfig.json",
-  "include": ["src/onchain", "test/onchain.e2e.test.ts"],
-  "exclude": []
-}

@@ -1,5 +1,0 @@
-{
-  "language": "php",
-  "command": ["php", "conformance/protocol-runner.php"],
-  "cwd": "php"
-}

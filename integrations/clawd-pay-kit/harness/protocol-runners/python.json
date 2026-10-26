@@ -1,5 +1,0 @@
-{
-  "language": "python",
-  "command": ["uv", "run", "--quiet", "python", "protocol_conformance_runner.py"],
-  "cwd": "python"
-}
