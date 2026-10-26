@@ -12,15 +12,7 @@
   "servers": [
     {
       "url": "https://solgpt.us",
-      "description": "Production (canonical)"
-    },
-    {
-      "url": "https://solgpt.trade",
-      "description": "Production alias"
-    },
-    {
-      "url": "https://x402.life",
-      "description": "Production alias"
+      "description": "Production (canonical). Aliases: https://solgpt.trade, https://x402.life"
     }
   ],
   "paths": {
@@ -29,14 +21,18 @@
         "operationId": "browserRun",
         "summary": "Run a cloud browser agent task",
         "description": "Start a Browser Run cloud-browser agent job. Unpaid requests return 402 with Solana USDC x402 accepts (and optional paper rail). Paid or CLAWD-holder free path returns a run session.",
-        "tags": ["browser-run"],
+        "tags": [
+          "browser-run"
+        ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["task"],
+                "required": [
+                  "task"
+                ],
                 "properties": {
                   "task": {
                     "type": "string",
@@ -66,7 +62,7 @@
             }
           },
           "402": {
-            "description": "Payment required — x402 / paper challenge for Solana USDC",
+            "description": "Payment required \u2014 x402 / paper challenge for Solana USDC",
             "content": {
               "application/json": {
                 "schema": {
@@ -84,7 +80,9 @@
             "amount": "0.042000"
           },
           "protocols": [
-            { "x402": {} },
+            {
+              "x402": {}
+            },
             {
               "mpp": {
                 "method": "solana",
@@ -101,7 +99,9 @@
         "operationId": "darkClawdMppCharge",
         "summary": "Create a Dark Clawd MPP charge challenge",
         "description": "Returns an MPP Solana USDC charge challenge (and paper mode metadata when configured). Retry with Authorization: Payment after settling.",
-        "tags": ["dark-clawd"],
+        "tags": [
+          "dark-clawd"
+        ],
         "requestBody": {
           "required": false,
           "content": {
@@ -144,7 +144,9 @@
             "amount": "0.010000"
           },
           "protocols": [
-            { "x402": {} },
+            {
+              "x402": {}
+            },
             {
               "mpp": {
                 "method": "solana",
@@ -161,7 +163,9 @@
         "operationId": "darkClawdTradePlan",
         "summary": "Create a paid Dark Clawd trade plan",
         "description": "MPP-gated trade planning endpoint. Unpaid calls return 402 with Solana USDC challenge; after payment returns a structured trade plan.",
-        "tags": ["dark-clawd"],
+        "tags": [
+          "dark-clawd"
+        ],
         "requestBody": {
           "required": false,
           "content": {
@@ -204,7 +208,9 @@
             "amount": "0.010000"
           },
           "protocols": [
-            { "x402": {} },
+            {
+              "x402": {}
+            },
             {
               "mpp": {
                 "method": "solana",
@@ -220,8 +226,10 @@
       "post": {
         "operationId": "mintSpongeApiKey",
         "summary": "Create a monthly SPONGE_API_KEY",
-        "description": "Unpaid requests return 402 with Solana USDC and $CLAWD-burn accepts. Default tier is base ($4.20 / 30d). Set tier=premium for $20 / 30d. After payment returns sgk_… once. payTo is SPONGE_PAYMENT_WALLET. Merchant SOLgpt.",
-        "tags": ["sponge"],
+        "description": "Unpaid requests return 402 with Solana USDC and $CLAWD-burn accepts. Default tier is base ($4.20 / 30d). Set tier=premium for $20 / 30d. After payment returns sgk_\u2026 once. payTo is SPONGE_PAYMENT_WALLET. Merchant SOLgpt.",
+        "tags": [
+          "sponge"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -231,7 +239,10 @@
                 "properties": {
                   "tier": {
                     "type": "string",
-                    "enum": ["base", "premium"],
+                    "enum": [
+                      "base",
+                      "premium"
+                    ],
                     "description": "base = $4.20 / 30d, premium = $20 / 30d"
                   }
                 }
@@ -252,7 +263,7 @@
             }
           },
           "402": {
-            "description": "Payment required — x402 / MPP Solana USDC or $CLAWD burn",
+            "description": "Payment required \u2014 x402 / MPP Solana USDC or $CLAWD burn",
             "content": {
               "application/json": {
                 "schema": {
@@ -270,7 +281,9 @@
             "amount": "4.200000"
           },
           "protocols": [
-            { "x402": {} },
+            {
+              "x402": {}
+            },
             {
               "mpp": {
                 "method": "solana",
