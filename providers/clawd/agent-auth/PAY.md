@@ -41,6 +41,11 @@ verify, lifecycle, capability, and key endpoints require the corresponding
 wallet signature, session, agent token, or API key and answer `400`/`401`
 JSON errors when credentials are missing or malformed.
 
+Pages and listings:
+
+- Registry: https://registry.musebook.trade/agent-auth
+- Directory listing: https://agent-auth.directory/providers/musebook
+
 ## Spend-aware usage
 
 - Read `/.well-known/agent-configuration` once and cache it — the endpoint

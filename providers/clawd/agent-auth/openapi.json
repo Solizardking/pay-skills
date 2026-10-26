@@ -94,17 +94,32 @@
      "content": {
       "application/json": {
        "example": {
-        "name": "example-agent"
+        "mode": "delegated",
+        "name": "my-agent",
+        "public_key": "<your-ed25519-public-key>"
        },
        "schema": {
         "properties": {
+         "mode": {
+          "description": "Trust mode for the agent: delegated (owner-approved grants) or autonomous.",
+          "enum": [
+           "delegated",
+           "autonomous"
+          ],
+          "type": "string"
+         },
          "name": {
           "description": "Agent display name.",
+          "type": "string"
+         },
+         "public_key": {
+          "description": "The agent Ed25519 public key.",
           "type": "string"
          }
         },
         "required": [
-         "name"
+         "name",
+         "public_key"
         ],
         "type": "object"
        }
@@ -281,17 +296,17 @@
      "content": {
       "application/json": {
        "example": {
-        "address": "11111111111111111111111111111111"
+        "wallet": "11111111111111111111111111111111"
        },
        "schema": {
         "properties": {
-         "address": {
+         "wallet": {
           "description": "Solana wallet address (base58).",
           "type": "string"
          }
         },
         "required": [
-         "address"
+         "wallet"
         ],
         "type": "object"
        }
@@ -316,14 +331,10 @@
      "content": {
       "application/json": {
        "example": {
-        "address": "11111111111111111111111111111111"
+        "wallet": "11111111111111111111111111111111"
        },
        "schema": {
         "properties": {
-         "address": {
-          "description": "Solana wallet address (base58).",
-          "type": "string"
-         },
          "nonce": {
           "description": "The nonce value.",
           "type": "string"
@@ -331,10 +342,14 @@
          "signature": {
           "description": "Wallet signature over the challenge.",
           "type": "string"
+         },
+         "wallet": {
+          "description": "Solana wallet address (base58).",
+          "type": "string"
          }
         },
         "required": [
-         "address"
+         "wallet"
         ],
         "type": "object"
        }
