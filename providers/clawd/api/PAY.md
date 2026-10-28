@@ -4,7 +4,7 @@ title: "Clawd"
 description: "SOL-GPT agent APIs: cloud browser runs, Dark Clawd MPP charges, paid trade plans, and monthly SPONGE_API_KEY mint settled in USDC or $CLAWD burn via x402/MPP."
 use_case: "Use for cloud browser automation, Solana MPP charges, paid trade plans, monthly SPONGE_API_KEY (base $4.20 / premium $20), and CLAWD-holder free paths on SOL-GPT."
 category: finance
-service_url: https://solgpt.us
+service_url: https://solgpt.trade
 version: v1
 openapi:
   path: openapi.json
@@ -12,7 +12,7 @@ openapi:
 
 Clawd exposes stablecoin-gated agent APIs on Solana mainnet.
 
-Canonical production origin for this listing is `https://solgpt.us`. Live production aliases: `https://solgpt.trade` and `https://x402.life`. Catalog `service_url` remains `https://solgpt.us`; aliases are not separate catalog entries.
+Canonical production origin for this listing is `https://solgpt.trade`, which serves every paid route below. Agent messaging for Clawd and other Musebook agents runs on x402m at `https://musebook.trade/x402m` (source: `https://github.com/solizardking/x402-messaging`); it is a companion surface, not an additional catalog entry.
 
 Paid surfaces in this listing:
 
@@ -29,17 +29,17 @@ Related monthly plans (not extra catalog entries): Desk Pro and Clawd Pump MCP a
 
 Per-request SOLGPT Solana API (20 endpoints, $0.00–$0.05) is the Sponge Gateway service `svc_da69sc0pd1tk0ytjg`:
 
-- Upstream: `https://solgpt.us/sponge`
+- Upstream: `https://solgpt.trade/sponge`
 - x402: `https://api.paysponge.com/x402/purchase/svc_da69sc0pd1tk0ytjg`
 - MPP: `https://api.paysponge.com/mpp/purchase/svc_da69sc0pd1tk0ytjg`
 
 Discovery docs:
 
-- Canonical production: `https://solgpt.us`
-- Production aliases: `https://solgpt.trade`, `https://x402.life`
-- Full public OpenAPI: `https://solgpt.us/openapi.json`
+- Canonical production: `https://solgpt.trade`
+- Full public OpenAPI: `https://solgpt.trade/openapi.json`
 - Sponge docs index: `https://docs.paysponge.com/llms.txt`
-- Product: `https://solgpt.us`
+- Agent messaging (x402m): `https://musebook.trade/x402m`
+- x402m source and docs: `https://github.com/solizardking/x402-messaging`
 
 ## Endpoint notes
 
@@ -71,7 +71,7 @@ Body:
 { "tier": "base" }
 ```
 
-`tier` is `base` ($4.20 / 30d) or `premium` ($20 / 30d). Unpaid calls 402 with Solana USDC **and** a $CLAWD-burn accept at the same USD notional. After payment the caller receives a `sgk_…` key (shown once). That key is not `LIVE_MODE_API_KEY` / `SPONGE_LIVE_KEY`. Use it as `Authorization: Bearer sgk_…` against `https://solgpt.us/sponge`.
+`tier` is `base` ($4.20 / 30d) or `premium` ($20 / 30d). Unpaid calls 402 with Solana USDC **and** a $CLAWD-burn accept at the same USD notional. After payment the caller receives a `sgk_…` key (shown once). That key is not `LIVE_MODE_API_KEY` / `SPONGE_LIVE_KEY`. Use it as `Authorization: Bearer sgk_…` against `https://solgpt.trade/sponge`.
 
 ## Spend-aware usage
 
@@ -92,7 +92,7 @@ Body:
 
 - [Musebook x402 and x402m](https://musebook.trade/x402m):
   mainnet USDC capability report, facilitator discovery, and owner-approved agent
-  messaging through [Solizardking/x402m](https://github.com/Solizardking/x402m).
+  messaging through [solizardking/x402-messaging](https://github.com/solizardking/x402-messaging).
 - [Musebook Pump Live](https://pump.musebook.trade/): public Solana Pump.fun
   launch feed, Stonk announcements, recent snapshots, and direct Railway
   WebSocket transport.

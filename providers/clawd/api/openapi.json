@@ -3,16 +3,20 @@
   "info": {
     "title": "Clawd Paid API",
     "version": "1.0.0",
-    "description": "Stablecoin-gated Clawd endpoints. Canonical production is https://solgpt.us; https://solgpt.trade and https://x402.life are live production aliases. Unpaid calls return HTTP 402 with x402 and/or MPP Solana USDC challenges. Paper modes may skip live settlement when configured. Monthly SPONGE_API_KEY mint is POST /api/sponge/keys ($4.20 base / $20 premium, USDC or $CLAWD burn).",
+    "description": "Stablecoin-gated Clawd endpoints. Canonical production is https://solgpt.trade. Agent messaging runs on x402m at https://musebook.trade/x402m (source: https://github.com/solizardking/x402-messaging). Unpaid calls return HTTP 402 with x402 and/or MPP Solana USDC challenges. Paper modes may skip live settlement when configured. Monthly SPONGE_API_KEY mint is POST /api/sponge/keys ($4.20 base / $20 premium, USDC or $CLAWD burn).",
     "contact": {
       "name": "Clawd",
-      "url": "https://solgpt.us"
+      "url": "https://solgpt.trade"
     }
+  },
+  "externalDocs": {
+    "description": "x402m agent messaging source and docs",
+    "url": "https://github.com/solizardking/x402-messaging"
   },
   "servers": [
     {
-      "url": "https://solgpt.us",
-      "description": "Production (canonical). Aliases: https://solgpt.trade, https://x402.life"
+      "url": "https://solgpt.trade",
+      "description": "Production (canonical)"
     }
   ],
   "paths": {

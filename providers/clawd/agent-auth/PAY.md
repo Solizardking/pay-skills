@@ -45,6 +45,8 @@ Pages and listings:
 
 - Registry: https://registry.musebook.trade/agent-auth
 - Directory listing: https://agent-auth.directory/providers/musebook
+- Agent messaging (x402m): https://musebook.trade/x402m
+- x402m source and docs: https://github.com/solizardking/x402-messaging
 
 ## Spend-aware usage
 

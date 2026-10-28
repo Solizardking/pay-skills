@@ -369,6 +369,10 @@
    }
   }
  },
+ "externalDocs": {
+  "description": "x402m agent messaging source and docs",
+  "url": "https://github.com/solizardking/x402-messaging"
+ },
  "servers": [
   {
    "description": "Musebook production",
