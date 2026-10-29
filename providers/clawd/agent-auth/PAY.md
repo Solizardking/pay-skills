@@ -36,7 +36,9 @@ What the API offers:
 - **API keys** — `GET /api/keys/verify` checks a Musebook API key presented
   as a Bearer token.
 
-All endpoints are free. Discovery and the SIWS challenge are public; the
+**This is a free identity provider.** No endpoint is priced or payment-gated, so
+`pay catalog check` probe lines reading "expected 402" are expected: endpoints
+answer 200, or 400/401 when credentials are missing. All endpoints are free. Discovery and the SIWS challenge are public; the
 verify, lifecycle, capability, and key endpoints require the corresponding
 wallet signature, session, agent token, or API key and answer `400`/`401`
 JSON errors when credentials are missing or malformed.

@@ -230,7 +230,7 @@
       "post": {
         "operationId": "mintSpongeApiKey",
         "summary": "Create a monthly SPONGE_API_KEY",
-        "description": "Unpaid requests return 402 with Solana USDC and $CLAWD-burn accepts. Default tier is base ($4.20 / 30d). Set tier=premium for $20 / 30d. After payment returns sgk_\u2026 once. payTo is SPONGE_PAYMENT_WALLET. Merchant SOLgpt.",
+        "description": "Unpaid requests return 402 with Solana USDC and $CLAWD-burn accepts. Default tier is base ($4.20 / 30d). Set tier=premium for $20 / 30d. After payment returns sgk_\u2026 once. payTo is SPONGE_PAYMENT_WALLET. Merchant SOLgpt. Price depends on `tier`: base 4.20 USDC, premium 20 USDC (30 days).",
         "tags": [
           "sponge"
         ],
@@ -280,9 +280,10 @@
         },
         "x-payment-info": {
           "price": {
-            "mode": "fixed",
+            "mode": "dynamic",
             "currency": "USD",
-            "amount": "4.200000"
+            "min": "4.200000",
+            "max": "20.000000"
           },
           "protocols": [
             {

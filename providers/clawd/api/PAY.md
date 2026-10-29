@@ -1,8 +1,8 @@
 ---
 name: api
 title: "Clawd"
-description: "SOL-GPT agent APIs: cloud browser runs, Dark Clawd MPP charges, paid trade plans, and monthly SPONGE_API_KEY mint settled in USDC or $CLAWD burn via x402/MPP."
-use_case: "Use for cloud browser automation, Solana MPP charges, paid trade plans, monthly SPONGE_API_KEY (base $4.20 / premium $20), and CLAWD-holder free paths on SOL-GPT."
+description: "SOL-GPT agent APIs: cloud browser runs, Dark Clawd MPP charges, paid trade plans, and and monthly SPONGE_API_KEY mint, settled in Solana USDC via x402/MPP."
+use_case: "Use for cloud browser automation, Solana MPP charges, paid trade plans, monthly SPONGE_API_KEY (base $4.20 / premium $20), and $CLAWD-holder free paths on SOL-GPT."
 category: finance
 service_url: https://solgpt.trade
 version: v1
@@ -21,11 +21,11 @@ Paid surfaces in this listing:
 | `POST` | `/api/browser-run/run` | $0.042 USDC | x402 + MPP |
 | `POST` | `/api/dark-clawd/mpp/charge` | $0.01 USDC | x402 + MPP |
 | `POST` | `/api/dark-clawd/mpp/trade/plan` | $0.01 USDC | x402 + MPP |
-| `POST` | `/api/sponge/keys` | $4.20 USDC (base) / $20 USDC (premium) or the same USD of $CLAWD burned | x402 + MPP |
+| `POST` | `/api/sponge/keys` | $4.20 USDC (base) / $20 USDC (premium) | x402 + MPP |
 
-Unpaid calls return **HTTP 402** with a Solana USDC challenge (SPONGE_API_KEY also accepts a $CLAWD-burn rail). `pay curl` (or Pay MCP `curl`) handles the handshake automatically. `payTo` for key mint is `SPONGE_PAYMENT_WALLET`. Merchant name **SOLgpt**.
+Unpaid calls return **HTTP 402** with a Solana USDC challenge. `pay curl` (or Pay MCP `curl`) handles the handshake automatically. Merchant name **SOLgpt**.
 
-Related monthly plans (not extra catalog entries): Desk Pro and Clawd Pump MCP are `$19.99 / 30d` USDC (`paywall/solgpt-desk.yml`, `paywall/clawd-pump.yml`).
+Related monthly plans (not catalog entries): Desk Pro and Clawd Pump MCP, $19.99 / 30d USDC.
 
 Per-request SOLGPT Solana API (20 endpoints, $0.00–$0.05) is the Sponge Gateway service `svc_da69sc0pd1tk0ytjg`:
 
@@ -71,7 +71,7 @@ Body:
 { "tier": "base" }
 ```
 
-`tier` is `base` ($4.20 / 30d) or `premium` ($20 / 30d). Unpaid calls 402 with Solana USDC **and** a $CLAWD-burn accept at the same USD notional. After payment the caller receives a `sgk_…` key (shown once). That key is not `LIVE_MODE_API_KEY` / `SPONGE_LIVE_KEY`. Use it as `Authorization: Bearer sgk_…` against `https://solgpt.trade/sponge`.
+`tier` is `base` ($4.20 / 30d) or `premium` ($20 / 30d). Unpaid calls return 402 with a Solana USDC challenge for the requested tier (4.20 or 20 USDC). After payment the caller receives a `sgk_…` key (shown once). That key is not `LIVE_MODE_API_KEY` / `SPONGE_LIVE_KEY`. Use it as `Authorization: Bearer sgk_…` against `https://solgpt.trade/sponge`.
 
 ## Spend-aware usage
 
@@ -96,17 +96,5 @@ Body:
 - [Musebook Pump Live](https://pump.musebook.trade/): public Solana Pump.fun
   launch feed, Stonk announcements, recent snapshots, and direct Railway
   WebSocket transport.
-- Proxy and bot setup:
-  the existing Musebook `x402-proxy-template` and `x402m-bot` implementations.
 
-These are companion integrations, not additional Clawd paid routes. Pump currently serves free
-reads; the two payment proxy demos advertise devnet test USDC.
-
-The SVM batch-settlement companion
-adds the requested high-throughput channel-payment integration contract and
-read-only preflight, separately from x402m messaging and atomic transfer batches.
-It is not an additional live Clawd or Musebook paid endpoint.
-
-The Clawd Pay Kit harness
-provides the TypeScript SDK build and conformance tier for this PR. It does not
-execute paid Clawd routes during CI.
+These are companion surfaces, not additional Clawd paid routes. Pump Live currently serves free reads.
