@@ -1,0 +1,218 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "x402.wtf Omni Facilitator",
+  "version": "v2",
+  "description": "Non-custodial omni-chain x402 facilitator hub. Verify and settle exact-scheme payments on Solana mainnet and devnet, Base, Bitcoin, Lightning, Cardano and NEAR Intents, with x402m batch settlement, receipts and z402 prepaid vouchers. Facilitator endpoints are free; resource servers set their own prices."
+ },
+ "servers": [
+  {
+   "url": "https://x402.wtf",
+   "description": "x402.wtf omni facilitator hub (live)"
+  }
+ ],
+ "paths": {
+  "/.well-known/x402-facilitator": {
+   "get": {
+    "summary": "Fetch the facilitator discovery document",
+    "description": "Returns the x402m discovery document: facilitator id, operator, schemes, networks, extensions and the full endpoint map.",
+    "responses": {
+     "200": {
+      "description": "Facilitator discovery document JSON."
+     }
+    }
+   }
+  },
+  "/supported": {
+   "get": {
+    "summary": "List supported payment kinds",
+    "description": "Returns every (x402Version, scheme, network) kind this facilitator can verify and settle, plus supported extensions.",
+    "responses": {
+     "200": {
+      "description": "Supported kinds document: { kinds: [{ x402Version, scheme, network, extra? }], extensions: [] }."
+     }
+    }
+   }
+  },
+  "/verify": {
+   "post": {
+    "summary": "Verify a payment payload without settling",
+    "description": "Checks a payer-signed payment payload against its payment requirements and returns a verdict. Verification is read-only: nothing is submitted on chain.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "x402Version": {
+          "type": "integer",
+          "enum": [
+           1,
+           2
+          ]
+         },
+         "paymentPayload": {
+          "type": "object",
+          "description": "The payer-signed x402 payment payload (v1 X-PAYMENT body or v2 PAYMENT-SIGNATURE envelope contents)."
+         },
+         "paymentRequirements": {
+          "type": "object",
+          "description": "The payment requirements the payload claims to satisfy: scheme, network (CAIP-2), asset, payTo, maxAmountRequired."
+         }
+        },
+        "required": [
+         "x402Version",
+         "paymentPayload",
+         "paymentRequirements"
+        ]
+       },
+       "example": {
+        "x402Version": 2,
+        "paymentPayload": {
+         "x402Version": 2,
+         "scheme": "exact",
+         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+         "payload": {
+          "transaction": "<base64 payer-signed transaction>"
+         }
+        },
+        "paymentRequirements": {
+         "scheme": "exact",
+         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+         "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+         "payTo": "5rxgJXoN2xvoZHcLXav1pEHAhvygLziZsz3xAzNEJfgr",
+         "maxAmountRequired": "10000",
+         "maxTimeoutSeconds": 300,
+         "resource": "https://example.com/paid-resource"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Verdict JSON: { isValid: boolean, invalidReason?: string, payer?: string }."
+     },
+     "400": {
+      "description": "Malformed request envelope."
+     }
+    }
+   }
+  },
+  "/settle": {
+   "post": {
+    "summary": "Submit a verified payment payload for settlement",
+    "description": "Submits or completes the payment described by the payload and returns the settlement result. A payment redeems exactly once; replays are rejected.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "properties": {
+         "x402Version": {
+          "type": "integer",
+          "enum": [
+           1,
+           2
+          ]
+         },
+         "paymentPayload": {
+          "type": "object",
+          "description": "The payer-signed x402 payment payload (v1 X-PAYMENT body or v2 PAYMENT-SIGNATURE envelope contents)."
+         },
+         "paymentRequirements": {
+          "type": "object",
+          "description": "The payment requirements the payload claims to satisfy: scheme, network (CAIP-2), asset, payTo, maxAmountRequired."
+         }
+        },
+        "required": [
+         "x402Version",
+         "paymentPayload",
+         "paymentRequirements"
+        ]
+       },
+       "example": {
+        "x402Version": 2,
+        "paymentPayload": {
+         "x402Version": 2,
+         "scheme": "exact",
+         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+         "payload": {
+          "transaction": "<base64 payer-signed transaction>"
+         }
+        },
+        "paymentRequirements": {
+         "scheme": "exact",
+         "network": "solana:5eykt4UsFv8P8NJdTREpY1vzqKqZKvdp",
+         "asset": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+         "payTo": "5rxgJXoN2xvoZHcLXav1pEHAhvygLziZsz3xAzNEJfgr",
+         "maxAmountRequired": "10000",
+         "maxTimeoutSeconds": 300,
+         "resource": "https://example.com/paid-resource"
+        }
+       }
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Settlement result JSON: { success: true, transaction: string, network: string, payer: string }."
+     },
+     "400": {
+      "description": "Settlement failed or payload invalid: { success: false, error: string, errorReason?: string }."
+     }
+    }
+   }
+  },
+  "/health": {
+   "get": {
+    "summary": "Fetch facilitator health status",
+    "description": "Returns { status: 'ok', service: 'x402-wtf', facilitator: 'x402wtf' } when the hub is up.",
+    "responses": {
+     "200": {
+      "description": "Health JSON."
+     }
+    }
+   }
+  },
+  "/v1/tools": {
+   "get": {
+    "summary": "Fetch the pay-per-call tool catalog",
+    "description": "Returns the catalog of 215 pay-per-call tools served from this host (name, price, rails). Tool execution is metered per call; see POST /v1/tools/pumpai_get_health for the gated call shape.",
+    "responses": {
+     "200": {
+      "description": "Tool catalog JSON: { data: { count: 215, tools: [...] } }."
+     }
+    }
+   }
+  },
+  "/v1/tools/pumpai_get_health": {
+   "post": {
+    "summary": "Create one paid tool call (pumpai_get_health)",
+    "description": "Executes one call of the pumpai_get_health tool. Every tool in the catalog is called the same way at the same flat price: POST /v1/tools/<name>. Unpaid calls return an x402 challenge priced at $0.01 in USDC on Solana mainnet (Base USDC also accepted), settled through this facilitator; the tool executes once per payment.",
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {}
+      }
+     }
+    },
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet or Base, USDC)."
+     }
+    }
+   }
+  }
+ }
+}
