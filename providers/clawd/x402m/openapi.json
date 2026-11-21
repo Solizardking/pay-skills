@@ -1,0 +1,219 @@
+{
+ "openapi": "3.1.0",
+ "info": {
+  "title": "Musebook x402m \u2014 Facilitator & Tool Shop",
+  "version": "v1",
+  "description": "Production deployment of the Musebook x402 facilitator: 178 pay-per-call Solana data, trading and agent APIs, each gated in USDC on Solana mainnet (exact scheme) and settled non-custodially by the Musebook facilitator. This spec covers a representative subset; the complete priced catalog is served at GET /__x402/config on the service host."
+ },
+ "servers": [
+  {
+   "url": "https://x402m.musebook.trade",
+   "description": "Musebook x402m deployment (live)"
+  }
+ ],
+ "paths": {
+  "/__x402/protected": {
+   "get": {
+    "summary": "Fetch one hour of shop access",
+    "description": "Grants one hour of access to the shop surface after payment. Unpaid calls return an x402 challenge priced at $0.01 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Access granted for one hour."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    }
+   }
+  },
+  "/api/imperial-sol-mark": {
+   "post": {
+    "summary": "Fetch the SOL mark price and funding snapshot",
+    "description": "Returns the current SOL mark price and funding snapshot for Imperial perpetuals. Unpaid calls return an x402 challenge priced at $0.0142 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "symbol": "SOL"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/imperial-funding-rates": {
+   "post": {
+    "summary": "Fetch Imperial funding rates",
+    "description": "Returns current funding rates across Imperial perpetual markets. Unpaid calls return an x402 challenge priced at $0.0142 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "symbol": "SOL"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/jupiter-swap-quote": {
+   "post": {
+    "summary": "Fetch a Jupiter swap quote",
+    "description": "Returns a Jupiter swap quote for a token pair on Solana. Unpaid calls return an x402 challenge priced at $0.0142 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "inputMint": "So11111111111111111111111111111111111111112",
+        "outputMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+        "amount": "1000000"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/solana-token-risk": {
+   "post": {
+    "summary": "Fetch a Solana token risk report",
+    "description": "Returns a risk report for a Solana token mint: authorities, holder concentration and liquidity signals. Unpaid calls return an x402 challenge priced at $0.0142 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/solana-wallet-balances": {
+   "post": {
+    "summary": "Fetch Solana wallet balances",
+    "description": "Returns SOL and SPL token balances for a Solana wallet address. Unpaid calls return an x402 challenge priced at $0.0142 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "wallet": "FYp4pswmeyzftftnoyJV9Rrr11XFb23yosrHZ3XG5tb9"
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/agent-chat": {
+   "post": {
+    "summary": "Create an agent chat completion",
+    "description": "Returns a chat completion from the Musebook agent. Paid per call. Unpaid calls return an x402 challenge priced at $0.01 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    },
+    "requestBody": {
+     "required": true,
+     "content": {
+      "application/json": {
+       "schema": {
+        "type": "object",
+        "additionalProperties": true
+       },
+       "example": {
+        "messages": [
+         {
+          "role": "user",
+          "content": "Summarize this wallet's activity"
+         }
+        ]
+       }
+      }
+     }
+    }
+   }
+  },
+  "/api/backpack/tickers": {
+   "get": {
+    "summary": "Fetch current Backpack Exchange tickers",
+    "description": "Returns current Backpack Exchange tickers. Unpaid calls return an x402 challenge priced at $0.01 in USDC on Solana mainnet.",
+    "responses": {
+     "200": {
+      "description": "Tool result JSON, with the settlement receipt in the PAYMENT-RESPONSE header."
+     },
+     "402": {
+      "description": "Payment required \u2014 x402 challenge (exact scheme, Solana mainnet, USDC)."
+     }
+    }
+   }
+  }
+ }
+}
