@@ -1,7 +1,7 @@
 ---
 name: x402-facilitator
 title: "x402.wtf Omni Facilitator"
-description: "Omni-chain x402 facilitator hub: verify and settle exact-scheme payments on Solana mainnet and devnet, Base, Bitcoin, Lightning, Cardano and NEAR Intents, with x402m batch settlement, receipts, prepaid vouchers and 215 pay-per-call tools."
+description: "Omni-chain x402 facilitator hub: verify and settle exact-scheme payments on Solana mainnet and devnet, Base, Bitcoin, Lightning, Cardano and NEAR Intents, with x402m batch settlement, receipts, prepaid vouchers and 256 pay-per-call tools."
 use_case: "Use when a resource server or agent needs an x402 facilitator: read supported payment kinds, verify a signed payment payload before serving a paid resource, settle exact payments on Solana mainnet, or settle batched payments."
 category: finance
 service_url: https://x402.wtf
@@ -22,11 +22,14 @@ Live payment legs (as advertised by `/supported`, 17 kinds):
 
 - **Solana mainnet and devnet** — `exact` scheme, x402 v1 and v2,
   settled through the production facilitator service. The hub also
-  serves the Clawd Compute catalog of 215 pay-per-call tools from this
-  host (`GET /v1/tools`, `POST /v1/tools/<name>`, flat $0.01 USDC) as a
-  facade over the gateway tool engine: an unpaid call returns a 402
-  challenge accepting USDC on Solana mainnet (or Base), and the
-  payment settles through this facilitator.
+  serves the Clawd Compute catalog of 256 pay-per-call tools from this
+  host (`GET /v1/tools`, `POST /v1/tools/<name>`, flat $0.01 USDC) —
+  PumpAI market data, tokenized equities, Backpack stocks and RFQ
+  quotes, Massive US stock data, and the Clawd desk tools — as a facade
+  over the gateway tool engine: an unpaid call returns a 402 challenge
+  accepting USDC on Solana mainnet (or Base), and the payment settles
+  through this facilitator. The same catalog is served as an MCP portal
+  at `https://clawdcompute.us/mcp` and `https://mcp.clawdcompute.us/mcp`.
 - **Base (eip155:8453)** — `exact` verify and settle delegated to the
   Coinbase CDP Facilitator; settlements carrying a Bazaar discovery
   declaration are indexed in the CDP Bazaar catalog.
